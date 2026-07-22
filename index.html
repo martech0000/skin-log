@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#c99791" />
   <title>skin log</title>
   <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/style.css?v=20260723-2" />
 </head>
 <body>
   <main class="phone-shell">
@@ -26,7 +26,7 @@
         <section class="condition-card"><div><span>today's condition</span><strong>ゆらぎやすい日</strong><p>刺激を重ねず、守るケアを。</p></div><div class="condition-icon">☾</div></section>
         <section class="routine-section"><div class="section-title"><h2>今日のケア</h2><span>routine</span></div><div class="routine-list"><label><input type="checkbox"> UVケアをする</label><label><input type="checkbox"> 保湿を重ねる</label><label><input type="checkbox"> 早めに休む</label></div></section>
         <section class="reading-section"><div class="section-title"><h2>今の肌に読む</h2><a href="https://note.com/brave_spirea2871" target="_blank" rel="noreferrer">all articles ↗</a></div><a class="article-card" href="https://note.com/brave_spirea2871" target="_blank" rel="noreferrer"><span>BARIER CARE</span><strong>頬が赤い、ヒリヒリする。<br>夏のゆらぎ肌、引き算設計</strong><small>刺激を溜めない、守るためのケア。</small></a><a class="article-card" href="https://note.com/brave_spirea2871" target="_blank" rel="noreferrer"><span>UV CARE</span><strong>日焼け止めを塗っているのに<br>焼ける理由。</strong><small>室内紫外線との付き合い方。</small></a></section>
-        <section class="saved-section"><span>MY NOTES</span><p>今日の肌メモを、ここに残していきます。</p></section>
+        <section class="saved-section"><span>MY NOTES</span><p>今日の肌メモを、ここに残していきます。</p><form id="skin-note-form" class="skin-note-form"><textarea id="skin-note-input" rows="2" maxlength="300" placeholder="例：頬が少し乾燥。今日は保湿を重ねる。"></textarea><button>記録する</button></form><div id="skin-note-list" class="skin-note-list"></div></section>
         <button id="open-admin" class="admin-link">管理画面</button>
       </main>
     </section>
@@ -34,9 +34,10 @@
       <header><button id="back-dashboard" class="back" aria-label="skin logへ戻る">‹</button><div><strong id="room-name">skin log</strong><small><span class="online-dot"></span>daily care notes</small></div><button id="logout" class="more" aria-label="ログアウト">•••</button></header>
       <div class="routine-bar"><span>JUL 22</span><strong>today's care</strong><span>☼ 26°</span></div>
       <div id="messages" class="messages" aria-live="polite"></div>
+      <div id="image-preview" class="image-preview hidden"><img id="image-preview-img" alt="選択した写真"><div><button id="cancel-image" type="button">やめる</button><button id="send-image" type="button">写真を送信</button></div></div>
       <form id="message-form" class="composer"><input id="image-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden><button id="attach" type="button" aria-label="写真を追加">＋</button><textarea id="message-input" rows="1" maxlength="1000" placeholder="今日の記録を追加…"></textarea><button id="send" aria-label="記録を追加">↑</button></form>
     </section>
   </main>
-  <script src="/app.js"></script>
+  <script src="/app.js?v=20260723-2"></script>
 </body>
 </html>
