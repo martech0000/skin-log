@@ -40,7 +40,7 @@ function render(items) {
     const newDay = !previous || new Date(previous.createdAt).toDateString() !== new Date(message.createdAt).toDateString();
     const own = message.sender === me;
     const read = own && (message.readBy || []).some(id => id !== me);
-    return `${newDay ? `<div class="date">${new Intl.DateTimeFormat('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(message.createdAt))}</div>` : ''}<article class="message ${own ? 'own' : ''}" data-id="${message.id}"><div class="bubble">${message.imageUrl ? `<img src="${message.imageUrl}" alt="送信された写真">` : ''}${message.text ? escape(message.text).replace(/\n/g, '<br>') : ''}</div><div class="message-meta">${read ? '<span class="read">既読</span>' : ''}<time>${time(message.createdAt)}</time></div></article>`;
+    return `${newDay ? `<div class="date">${new Intl.DateTimeFormat('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(message.createdAt))}</div>` : ''}<article class="message ${own ? 'own' : ''}" data-id="${message.id}">${own ? `<button class="message-menu" aria-label="送信メニュー" data-id="${message.id}">•••</button>` : ''}<div class="bubble">${message.imageUrl ? `<img src="${message.imageUrl}" alt="送信された写真">` : ''}${message.text ? escape(message.text).replace(/\n/g, '<br>') : ''}</div><div class="message-meta">${read ? '<span class="read">既読</span>' : ''}<time>${time(message.createdAt)}</time></div></article>`;
   }).join('');
   box.scrollTop = box.scrollHeight;
 }
@@ -85,10 +85,7 @@ $('#send-image').addEventListener('click', () => {
   }; reader.readAsDataURL(file);
 });
 async function cancelMessage(id) { if (!confirm('この送信を取り消しますか？')) return; try { await api(`/api/messages/${id}`, { method: 'DELETE', body: '{}' }); await refresh(); } catch (error) { alert(error.message); } }
-let pressTimer = null;
-$('#messages').addEventListener('contextmenu', event => { const message = event.target.closest('.message.own'); if (!message) return; event.preventDefault(); cancelMessage(message.dataset.id); });
-$('#messages').addEventListener('touchstart', event => { const message = event.target.closest('.message.own'); if (!message) return; pressTimer = setTimeout(() => cancelMessage(message.dataset.id), 650); }, { passive: true });
-['touchend', 'touchmove', 'touchcancel'].forEach(type => $('#messages').addEventListener(type, () => { clearTimeout(pressTimer); pressTimer = null; }, { passive: true }));
+$('#messages').addEventListener('click', event => { const menu = event.target.closest('.message-menu'); if (menu) cancelMessage(menu.dataset.id); });
 $('#logout').addEventListener('click', async () => { await api('/api/logout', { method: 'POST', body: '{}' }); location.reload(); });
 $('#dashboard-logout').addEventListener('click', async () => { await api('/api/logout', { method: 'POST', body: '{}' }); location.reload(); });
 $('#open-admin').addEventListener('click', () => {
