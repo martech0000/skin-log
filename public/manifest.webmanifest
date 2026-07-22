@@ -1,0 +1,8 @@
+{
+  "name": "skin log",
+  "short_name": "skin log",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbf6f3",
+  "theme_color": "#c99791"
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#c99791" />
+  <title>skin log</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="phone-shell">
+    <section id="setup" class="center-card hidden"><h1>設定待ち</h1><p>管理者が合言葉を設定すると使えるようになります。</p></section>
+    <section id="login" class="login-screen hidden">
+      <div class="brand-mark">s</div><h1>skin log</h1><p>毎日の肌と気分を、静かに記録。</p>
+      <form id="login-form">
+        <label>閲覧コード<input id="password" type="password" autocomplete="current-password" placeholder="コードを入力" required></label>
+        <p id="login-error" class="error" aria-live="polite"></p><button>記録を見る</button>
+      </form>
+    </section>
+    <section id="chat" class="chat-screen hidden">
+      <header><div class="brand-mini">s</div><div><strong id="room-name">skin log</strong><small><span class="online-dot"></span>daily care notes</small></div><button id="logout" class="more" aria-label="メニュー">•••</button></header>
+      <div class="routine-bar"><span>JUL 22</span><strong>today's care</strong><span>☼ 26°</span></div>
+      <div id="messages" class="messages" aria-live="polite"></div>
+      <form id="message-form" class="composer"><input id="image-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden><button id="attach" type="button" aria-label="写真を追加">＋</button><textarea id="message-input" rows="1" maxlength="1000" placeholder="今日の記録を追加…"></textarea><button id="send" aria-label="記録を追加">↑</button></form>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
