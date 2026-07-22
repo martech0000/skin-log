@@ -134,6 +134,16 @@ const server = http.createServer(async (req, res) => {
       } catch { return send(res, 400, { error: '送信に失敗しました。' }); }
     }
   }
+  if (url.pathname.startsWith('/api/messages/') && req.method === 'DELETE') {
+    const user = currentUser(req);
+    if (!user) return send(res, 401, { error: 'ログインしてください。' });
+    const id = path.basename(url.pathname); const all = messages(); const index = all.findIndex(message => message.id === id);
+    if (index === -1) return send(res, 404, { error: 'メッセージが見つかりません。' });
+    if (all[index].sender !== user.name) return send(res, 403, { error: '自分のメッセージだけ取り消せます。' });
+    const [removed] = all.splice(index, 1); saveMessages(all);
+    if (removed.imageUrl?.startsWith('/uploads/')) fs.unlink(path.join(UPLOADS_DIR, path.basename(removed.imageUrl)), () => {});
+    return send(res, 200, { ok: true });
+  }
   if (url.pathname === '/api/read' && req.method === 'POST') {
     const user = currentUser(req);
     if (!user) return send(res, 401, { error: 'ログインしてください。' });
