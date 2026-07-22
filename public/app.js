@@ -1,6 +1,7 @@
 const $ = (selector) => document.querySelector(selector);
 let me = null;
 let lastSignature = '';
+let openAdminAfterLogin = false;
 function urlBase64ToUint8Array(value) { const pad = '='.repeat((4 - value.length % 4) % 4); const base64 = (value + pad).replace(/-/g, '+').replace(/_/g, '/'); return Uint8Array.from(atob(base64), char => char.charCodeAt(0)); }
 function makeId() {
   if (window.crypto?.randomUUID) return window.crypto.randomUUID();
@@ -11,7 +12,7 @@ function makeId() {
 }
 function deviceId() { let value = localStorage.getItem('futari-device-id'); if (!value) { value = makeId(); localStorage.setItem('futari-device-id', value); } return value; }
 
-function show(id) { ['setup', 'login', 'chat'].forEach(x => $(`#${x}`).classList.toggle('hidden', x !== id)); }
+function show(id) { ['setup', 'login', 'dashboard', 'chat'].forEach(x => $(`#${x}`).classList.toggle('hidden', x !== id)); }
 function escape(text) { const el = document.createElement('div'); el.textContent = text; return el.innerHTML; }
 function time(iso) { return new Intl.DateTimeFormat('ja-JP', { hour: '2-digit', minute: '2-digit' }).format(new Date(iso)); }
 function autoGrow() { const el = $('#message-input'); el.style.height = 'auto'; el.style.height = `${Math.min(el.scrollHeight, 110)}px`; }
@@ -42,10 +43,11 @@ async function refresh() {
 async function initialize() {
   if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(registrations => registrations.forEach(registration => registration.unregister()));
   const state = await api('/api/status');
-  if (!state.configured) return show('setup');
   $('#room-name').textContent = state.roomName;
-  if (!state.authenticated) return show('login');
-  me = state.user; show('chat'); await refresh(); setInterval(refresh, 2500);
+  if (!state.authenticated) return show('dashboard');
+  me = state.user;
+  if (openAdminAfterLogin) { show('chat'); await refresh(); } else show('dashboard');
+  setInterval(refresh, 2500);
 }
 
 $('#login-form').addEventListener('submit', async (event) => {
@@ -75,4 +77,10 @@ $('#image-input').addEventListener('change', event => {
   }; reader.readAsDataURL(file);
 });
 $('#logout').addEventListener('click', async () => { await api('/api/logout', { method: 'POST', body: '{}' }); location.reload(); });
+$('#dashboard-logout').addEventListener('click', async () => { await api('/api/logout', { method: 'POST', body: '{}' }); location.reload(); });
+$('#open-admin').addEventListener('click', () => {
+  if (me) { show('chat'); refresh(); return; }
+  openAdminAfterLogin = true; $('#login-error').textContent = ''; $('#password').value = ''; show('login'); $('#password').focus();
+});
+$('#back-dashboard').addEventListener('click', () => show('dashboard'));
 initialize().catch(() => show('login'));
