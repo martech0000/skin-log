@@ -69,10 +69,6 @@ $('#message-form').addEventListener('submit', async (event) => {
   try { await api('/api/messages', { method: 'POST', body: JSON.stringify({ text }) }); await refresh(); }
   catch (error) { alert(error.message); input.value = text; autoGrow(); } finally { $('#send').disabled = false; input.focus(); }
 });
-$('#message-input').addEventListener('keydown', event => {
-  if (event.isComposing || event.keyCode === 229) return;
-  if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); $('#message-form').requestSubmit(); }
-});
 $('#attach').addEventListener('click', () => $('#image-input').click());
 $('#image-input').addEventListener('change', event => {
   const file = event.target.files[0]; if (!file) return;
