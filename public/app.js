@@ -84,7 +84,14 @@ $('#send-image').addEventListener('click', () => {
     catch (error) { alert(error.message); } finally { $('#send-image').disabled = false; }
   }; reader.readAsDataURL(file);
 });
-async function cancelMessage(id) { if (!confirm('この送信を取り消しますか？')) return; try { await api(`/api/messages/${id}`, { method: 'DELETE', body: '{}' }); await refresh(); } catch (error) { alert(error.message); } }
+async function cancelMessage(id) {
+  if (!confirm('この送信を取り消しますか？')) return;
+  try {
+    await api(`/api/messages/${id}`, { method: 'DELETE', body: '{}' });
+    document.querySelector(`.message[data-id="${id}"]`)?.remove();
+    lastSignature = ''; await refresh();
+  } catch (error) { alert(error.message); }
+}
 $('#messages').addEventListener('click', event => { const menu = event.target.closest('.message-menu'); if (menu) cancelMessage(menu.dataset.id); });
 $('#logout').addEventListener('click', async () => { await api('/api/logout', { method: 'POST', body: '{}' }); location.reload(); });
 $('#dashboard-logout').addEventListener('click', async () => { await api('/api/logout', { method: 'POST', body: '{}' }); location.reload(); });
