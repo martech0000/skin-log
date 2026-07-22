@@ -5,6 +5,8 @@ const path = require('path');
 const webpush = require('web-push');
 
 const PORT = process.env.PORT || 3000;
+// 一時停止中は全アクセスをメンテナンス画面にする。再開時は false に戻す。
+const SITE_DISABLED = true;
 const ROOT = __dirname;
 const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
@@ -98,6 +100,10 @@ function serveFile(res, file, type) {
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
+  if (SITE_DISABLED) {
+    res.writeHead(503, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+    return res.end('<!doctype html><html lang="ja"><meta name="viewport" content="width=device-width, initial-scale=1"><title>skin log</title><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#fbf6f3;color:#564a48;font-family:-apple-system,BlinkMacSystemFont,sans-serif"><main style="text-align:center;padding:32px"><p style="letter-spacing:.15em;color:#b79b94;font-size:12px">SKIN LOG</p><h1 style="font-family:Georgia,serif;font-weight:400">ただいまメンテナンス中です</h1><p style="color:#948783">しばらくしてから、もう一度お試しください。</p></main></body></html>');
+  }
   const config = settings();
 
   if (url.pathname === '/api/status') {
